@@ -21,6 +21,8 @@ Plug 'neoclide/coc.nvim', { 'branch': 'release' }
 Plug 'Yggdroot/LeaderF', { 'do': './install.sh' }
 " Check syntax in Vim asynchronously and fix files
 Plug 'dense-analysis/ale'
+" ALE indicator for the lightline vim plugin
+Plug 'maximbaz/lightline-ale'
 " Dark powered asynchronous completion framework
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 " The dark powered file explorer implementation
@@ -37,6 +39,8 @@ Plug 'tpope/vim-surround'
 Plug 'tpope/vim-fugitive'
 " Use nvim/vim's builtin terminal in the floating/popup window
 Plug 'voldikss/vim-floaterm'
+" Insert or delete brackets, parens, quotes in pair.
+Plug 'jiangmiao/auto-pairs'
 
 " Initialize plugin system
 call plug#end()
@@ -64,6 +68,7 @@ set whichwrap+=<,>,h,l					" Allow backspace and cursor keys to cross line bound
 set autoread							" Automatically read a file changed outside of vim
 set autowrite							" Automatically write a file when leaving a modified buffe
 set linespace=0							" No extra spaces between rows
+set timeoutlen=300						" Set default timeout
 
 " =============================================================================
 " Indent
@@ -101,10 +106,10 @@ set showmode							" Show current mode in command-line
 set report=0							" Always report changed lines
 set pumheight=20						" Avoid the pop up menu occupying the whole screen
 set noshowmode							" The mode information is displayed in the statusline
+set mouse=a								" Automatically enable mouse usage
 if has("gui_running")
     set lines=35 columns=150
     set guioptions-=T
-	set mouse=a							" Automatically enable mouse usage
 	set mousehide						" Hide the mouse cursor while typing
 else
 	set t_Co=256
@@ -129,12 +134,14 @@ set matchtime=5							" Show matching time
 " LeaderF
 " =============================================================================
 " Enable popup mode
-let g:Lf_WindowPosition = 'popup'
+let g:Lf_WindowPosition='popup'
 " Preview the result in a popup window
-let g:Lf_PreviewInPopup = 1
+let g:Lf_PreviewInPopup=1
 " Cancel default key bindings
 let g:Lf_ShortcutB=''
 let g:Lf_ShortcutF=''
+" Use pygments if available
+let g:Lf_Gtagslabel='native-pygments'
 
 " =============================================================================
 " ALE
@@ -185,53 +192,62 @@ let g:NERDTreeQuitOnOpen = 1
 let g:NERDTreeWinPos = "right"
 
 " =============================================================================
+" vim-floaterm  
+" =============================================================================
+let g:floaterm_autoclose=2
+let g:floaterm_position='bottom'
+let g:floaterm_height=20
+let g:floaterm_width=0.99
+let g:floaterm_rootmarkers=[
+   \'.project',
+   \'.git',
+   \'.hg',
+   \'.svn',
+   \'.root',
+   \'.gitignore'
+   \]
+autocmd User Startified setlocal buflisted
+
+" =============================================================================
 " LightLine
 " =============================================================================
 let g:lightline = {
-	\ 'colorscheme': 'wombat',
-	\ 'active': {
-	\   'left': [['mode', 'paste'],
-	\            [ 'cocstatus', 'currentfunction', 'readonly', 'filename', 'modified' ]],
-	\   'right': [['lineinfo'],
-	\             ['percent'],
-	\             ['fileformat', 'fileencoding', 'filetype'],
-	\             ['readonly', 'linter_warnings', 'linter_errors', 'linter_ok']]
+    \ 'colorscheme': 'wombat',
+    \ 'active': {
+	\   'left': [
+    \             [ 'mode', 'paste' ],
+	\             [ 'gitbranch', 'readonly', 'filename', 'modified', 'cocstatus', 'currentfunction' ]
+    \           ],
+	\   'right': [
+    \              [ 'lineinfo' ],
+	\              [ 'percent' ],
+	\              [ 'fileformat', 'fileencoding', 'filetype' ],
+	\              [ 'linter_checking', 'linter_errors', 'linter_warnings', 'linter_infos', 'linter_ok' ],
+    \            ]
 	\ },
 	\ 'component_function': {
+    \   'gitbranch': 'FugitiveHead',
 	\   'cocstatus': 'coc#status',
-	\   'currentfunction': 'CocCurrentFunction'
+	\   'currentfunction': 'CocCurrentFunction',
 	\ },
 	\ 'component_expand': {
-	\   'linter_warnings': 'LightlineLinterWarnings',
-	\   'linter_errors': 'LightlineLinterErrors',
-	\   'linter_ok': 'LightlineLinterOK'
+	\   'linter_checking': 'lightline#ale#checking',
+	\   'linter_infos': 'lightline#ale#infos',
+	\   'linter_warnings': 'lightline#ale#warnings',
+    \   'linter_errors': 'lightline#ale#errors',
+    \   'linter_ok': 'lightline#ale#ok',
 	\ },
 	\ 'component_type': {
 	\   'readonly': 'error',
-	\   'linter_warnings': 'warning',
-	\   'linter_errors': 'error'
+	\   'linter_checking': 'right',
+    \   'linter_infos': 'right',
+    \   'linter_warnings': 'warning',
+    \   'linter_errors': 'error',
+    \   'linter_ok': 'right',
 	\ },
 	\ }
 function! CocCurrentFunction()
     return get(b:, 'coc_current_function', '')
-endfunction
-function! LightlineLinterWarnings() abort
-  let l:counts = ale#statusline#Count(bufnr(''))
-  let l:all_errors = l:counts.error + l:counts.style_error
-  let l:all_non_errors = l:counts.total - l:all_errors
-  return l:counts.total == 0 ? '' : printf('LINT:%dW, all_non_errors)
-endfunction
-function! LightlineLinterErrors() abort
-  let l:counts = ale#statusline#Count(bufnr(''))
-  let l:all_errors = l:counts.error + l:counts.style_error
-  let l:all_non_errors = l:counts.total - l:all_errors
-  return l:counts.total == 0 ? '' : printf('LINT:%dE, all_errors)
-endfunction
-function! LightlineLinterOK() abort
-  let l:counts = ale#statusline#Count(bufnr(''))
-  let l:all_errors = l:counts.error + l:counts.style_error
-  let l:all_non_errors = l:counts.total - l:all_errors
-  return l:counts.total == 0 ? 'LINT:OK' : ''
 endfunction
 
 " Update and show lightline but only if it's visible (e.g., not in Goyo)
@@ -254,18 +270,10 @@ augroup _lightline
 augroup END
 
 " =============================================================================
-" vim-floaterm
-" =============================================================================
-let g:floaterm_autoclose=1
-autocmd User Startified setlocal buflisted
-
-" =============================================================================
 " vim-which-key
 " =============================================================================
 " General settings
 " {{{
-let g:Lf_Gtagslabel = 'native-pygments'
-set timeoutlen=300						" Set default timeout
 let g:mapleader="\<Space>"				" Set leader key
 let g:maplocalleader=","
 nnoremap <silent> <leader> :<c-u>WhichKey '<Space>'<CR>
@@ -311,9 +319,12 @@ let g:which_key_map.t.p = 'previous result'
 " Shell management
 " {{{
 let g:which_key_map.s = { 'name': '+shell' }
+" Toggle terminal for F12
+nnoremap <F12> :FloatermToggle<CR>
+tnoremap <F12> <C-\><C-n>:FloatermToggle<CR>
 " Open bash
 nnoremap <leader>s1 :FloatermToggle<CR>
-let g:which_key_map.s.1 = 'bash'
+let g:which_key_map.s.1 = 'terminal 1'
 " }}}
 
 " Project management
