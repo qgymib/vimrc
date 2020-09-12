@@ -41,6 +41,8 @@ Plug 'tpope/vim-fugitive'
 Plug 'voldikss/vim-floaterm'
 " Insert or delete brackets, parens, quotes in pair.
 Plug 'jiangmiao/auto-pairs'
+" Vim undo tree visualizer
+Plug 'simnalamburt/vim-mundo'
 
 " Initialize plugin system
 call plug#end()
@@ -106,8 +108,8 @@ set showmode							" Show current mode in command-line
 set report=0							" Always report changed lines
 set pumheight=20						" Avoid the pop up menu occupying the whole screen
 set noshowmode							" The mode information is displayed in the statusline
-set mouse=a								" Automatically enable mouse usage
 if has("gui_running")
+   set mouse=a								" Automatically enable mouse usage
     set lines=35 columns=150
     set guioptions-=T
 	set mousehide						" Hide the mouse cursor while typing
@@ -119,6 +121,17 @@ if &term =~ '256color'
 										" render properly when inside 256-color tmux and GNU screen.
 										" see also http://snk.tuxfamily.org/log/vim-256color-bce.html
 endif
+
+" toggle between terminal and vim mouse
+map <silent><F11> :let &mouse=(&mouse == "a"?"":"a")<CR>:call ShowMouseMode()<CR>
+imap <silent><F11> :let &mouse=(&mouse == "a"?"":"a")<CR>:call ShowMouseMode()<CR>
+function ShowMouseMode()
+    if (&mouse == 'a')
+        echo "mouse-vim"
+    else
+        echo "mouse-xterm"
+    endif
+endfunction
 
 " =============================================================================
 " Search
@@ -317,7 +330,10 @@ let g:which_key_map.w.s.k = 'switch to bottom window'
 let g:which_key_map.f = { 'name': '+file' }
 " File browser
 nnoremap <leader>fb :NERDTreeToggle<CR>
-let g:which_key_map.f.b = 'file browser'
+let g:which_key_map.f.b = 'browser'
+" Open project file
+nnoremap <leader>fo :FloatermNew nnn<CR>
+let g:which_key_map.f.o = 'open'
 " }}}
 
 " GUI
