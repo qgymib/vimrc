@@ -3,8 +3,10 @@
 " =============================================================================
 call plug#begin(stdpath('data') . '/plugged')
 
-" A light and configurable statusline/tabline plugin for Vim
-Plug 'itchyny/lightline.vim'
+" Lean & mean status/tabline for vim that's light as air.
+Plug 'vim-airline/vim-airline'
+" A collection of themes for vim-airline
+Plug 'vim-airline/vim-airline-themes'
 " The fancy start screen for Vim
 Plug 'mhinz/vim-startify'
 " Show a diff using Vim sign column
@@ -21,8 +23,6 @@ Plug 'neoclide/coc.nvim', { 'branch': 'release' }
 Plug 'Yggdroot/LeaderF', { 'do': './install.sh' }
 " Check syntax in Vim asynchronously and fix files
 Plug 'dense-analysis/ale'
-" ALE indicator for the lightline vim plugin
-Plug 'maximbaz/lightline-ale'
 " Dark powered asynchronous completion framework
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 " The dark powered file explorer implementation
@@ -207,67 +207,6 @@ let g:floaterm_rootmarkers=[
    \'.gitignore'
    \]
 autocmd User Startified setlocal buflisted
-
-" =============================================================================
-" LightLine
-" =============================================================================
-let g:lightline = {
-    \ 'colorscheme': 'wombat',
-    \ 'active': {
-	\   'left': [
-    \             [ 'mode', 'paste' ],
-	\             [ 'gitbranch', 'readonly', 'filename', 'modified', 'cocstatus', 'currentfunction' ]
-    \           ],
-	\   'right': [
-    \              [ 'lineinfo' ],
-	\              [ 'percent' ],
-	\              [ 'fileformat', 'fileencoding', 'filetype' ],
-	\              [ 'linter_checking', 'linter_errors', 'linter_warnings', 'linter_infos', 'linter_ok' ],
-    \            ]
-	\ },
-	\ 'component_function': {
-    \   'gitbranch': 'FugitiveHead',
-	\   'cocstatus': 'coc#status',
-	\   'currentfunction': 'CocCurrentFunction',
-	\ },
-	\ 'component_expand': {
-	\   'linter_checking': 'lightline#ale#checking',
-	\   'linter_infos': 'lightline#ale#infos',
-	\   'linter_warnings': 'lightline#ale#warnings',
-    \   'linter_errors': 'lightline#ale#errors',
-    \   'linter_ok': 'lightline#ale#ok',
-	\ },
-	\ 'component_type': {
-	\   'readonly': 'error',
-	\   'linter_checking': 'right',
-    \   'linter_infos': 'right',
-    \   'linter_warnings': 'warning',
-    \   'linter_errors': 'error',
-    \   'linter_ok': 'right',
-	\ },
-	\ }
-function! CocCurrentFunction()
-    return get(b:, 'coc_current_function', '')
-endfunction
-
-" Update and show lightline but only if it's visible (e.g., not in Goyo)
-function! s:MaybeUpdateLightline()
-  if exists('#lightline')
-    call lightline#update()
-  end
-endfunction
-
-" Update the lightline scheme from the colorscheme. Hopefully.
-function! s:UpdateLightlineColorScheme()
-  let g:lightline.colorscheme = g:colors_name
-  call lightline#init()
-endfunction
-
-augroup _lightline
-  autocmd!
-  autocmd User ALELint call s:MaybeUpdateLightline()
-  autocmd ColorScheme * call s:UpdateLightlineColorScheme()
-augroup END
 
 " =============================================================================
 " vim-which-key
