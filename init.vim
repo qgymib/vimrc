@@ -54,72 +54,72 @@ set termencoding=utf-8
 set fileformats=unix,dos,mac
 set fileencodings=utf-8,gb18030,gbk
 set fileencoding=utf-8
-set encoding=utf-8						" Set default encoding
+set encoding=utf-8                      " Set default encoding
 
 " =============================================================================
 " Editor
 " =============================================================================
 set nocompatible
-filetype plugin indent on				" Automatically detect file types
+filetype plugin indent on               " Automatically detect file types
 set belloff=all
 set nobackup
 set confirm
-set history=1024						" Maximum history record
-set backspace=eol,start,indent			" Backspace for dummies
-set whichwrap+=<,>,h,l					" Allow backspace and cursor keys to cross line boundaries
-set autoread							" Automatically read a file changed outside of vim
-set autowrite							" Automatically write a file when leaving a modified buffe
-set linespace=0							" No extra spaces between rows
-set timeoutlen=300						" Set default timeout
+set history=1024                        " Maximum history record
+set backspace=eol,start,indent          " Backspace for dummies
+set whichwrap+=<,>,h,l                  " Allow backspace and cursor keys to cross line boundaries
+set autoread                            " Automatically read a file changed outside of vim
+set autowrite                           " Automatically write a file when leaving a modified buffe
+set linespace=0                         " No extra spaces between rows
+set timeoutlen=300                      " Set default timeout
 
 " =============================================================================
 " Indent
 " =============================================================================
-set smarttab							" Smart tab
-set autoindent							" Indent at the same level of the previous line
+set smarttab                            " Smart tab
+set autoindent                          " Indent at the same level of the previous line
 set smartindent
-set shiftwidth=4						" Use indents of 4 spaces
-set tabstop=4							" An indentation every four columns
-set softtabstop=4						" Let backspace delete indent
+set shiftwidth=4                        " Use indents of 4 spaces
+set tabstop=4                           " An indentation every four columns
+set softtabstop=4                       " Let backspace delete indent
 set noexpandtab
 
 " =============================================================================
 " UI
 " =============================================================================
 colorscheme dracula
-syntax on								" Syntax highlighting
+syntax on                               " Syntax highlighting
 set number
 set wrap
 set linebreak
-set display=lastline					" Show as much as possible of the last line
-set laststatus=2						" Always show status line
+set display=lastline                    " Show as much as possible of the last line
+set laststatus=2                        " Always show status line
 set cursorline
-set scrolljump=5						" Line to scroll when cursor leaves screen
-set scrolloff=3							" Minumum lines to keep above and below cursor
-set ttyfast								" Faster redrawing
-set viminfo+=!							" Viminfo include !
-set wildmenu							" Show list instead of just completing
+set scrolljump=5                        " Line to scroll when cursor leaves screen
+set scrolloff=3                         " Minumum lines to keep above and below cursor
+set ttyfast                             " Faster redrawing
+set viminfo+=!                          " Viminfo include !
+set wildmenu                            " Show list instead of just completing
 set wildmode=list:longest,full
-set splitright							" Puts new vsplit windows to the right of the current
-set splitbelow							" Puts new split windows to the bottom of the current
-set ruler								" Show the ruler
-set showcmd								" Show partial commands in status line and Selected characters/lines in visual mode
-set showmode							" Show current mode in command-line
-set report=0							" Always report changed lines
-set pumheight=20						" Avoid the pop up menu occupying the whole screen
-set noshowmode							" The mode information is displayed in the statusline
+set splitright                          " Puts new vsplit windows to the right of the current
+set splitbelow                          " Puts new split windows to the bottom of the current
+set ruler                               " Show the ruler
+set showcmd                             " Show partial commands in status line and Selected characters/lines in visual mode
+set showmode                            " Show current mode in command-line
+set report=0                            " Always report changed lines
+set pumheight=20                        " Avoid the pop up menu occupying the whole screen
+set noshowmode                          " The mode information is displayed in the statusline
 if has("gui_running")
-   set mouse=a								" Automatically enable mouse usage
+    set mouse=a                              " Automatically enable mouse usage
     set lines=35 columns=150
     set guioptions-=T
-	set mousehide						" Hide the mouse cursor while typing
+    set mousehide                       " Hide the mouse cursor while typing
 else
-	set t_Co=256
+    set t_Co=256
 endif
 if &term =~ '256color'
-	set t_ut=							" disable Background Color Erase (BCE) so that color schemes
-										" render properly when inside 256-color tmux and GNU screen.
-										" see also http://snk.tuxfamily.org/log/vim-256color-bce.html
+    set t_ut=                           " disable Background Color Erase (BCE) so that color schemes
+                                        " render properly when inside 256-color tmux and GNU screen.
+                                        " see also http://snk.tuxfamily.org/log/vim-256color-bce.html
 endif
 
 " toggle between terminal and vim mouse
@@ -136,12 +136,12 @@ endfunction
 " =============================================================================
 " Search
 " =============================================================================
-set hlsearch							" Highlight search terms
-set incsearch							" Find as you type search
-set ignorecase							" Case insensitive search
-set smartcase							" ... but case sensitive when uc present
-set showmatch							" Show matching brackets/parentthesis
-set matchtime=5							" Show matching time
+set hlsearch                            " Highlight search terms
+set incsearch                           " Find as you type search
+set ignorecase                          " Case insensitive search
+set smartcase                           " ... but case sensitive when uc present
+set showmatch                           " Show matching brackets/parentthesis
+set matchtime=5                         " Show matching time
 
 " =============================================================================
 " LeaderF
@@ -226,7 +226,7 @@ autocmd User Startified setlocal buflisted
 " =============================================================================
 " General settings
 " {{{
-let g:mapleader="\<Space>"				" Set leader key
+let g:mapleader="\<Space>"              " Set leader key
 let g:maplocalleader=","
 nnoremap <silent> <leader> :<c-u>WhichKey '<Space>'<CR>
 vnoremap <silent> <leader> :<c-u>WhichKeyVisual '<Space>'<CR>
