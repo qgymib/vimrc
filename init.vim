@@ -315,8 +315,11 @@ let g:which_key_map.p.s.f = 'search file'
 " {{{
 let g:which_key_map.b = { 'name': '+buffer' }
 " List buffer
-nnoremap <leader>bl : Leaderf! buffer<CR>
+nnoremap <leader>bl :Leaderf! buffer<CR>
 let g:which_key_map.b.l = 'list buffers'
+" Close buffer
+nnoremap <leader>bc :bd<CR>
+let g:which_key_map.b.c = 'close buffer'
 " }}}
 
 " Window management
