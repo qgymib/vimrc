@@ -67,10 +67,11 @@ set confirm
 set history=1024                        " Maximum history record
 set backspace=eol,start,indent          " Backspace for dummies
 set whichwrap+=<,>,h,l                  " Allow backspace and cursor keys to cross line boundaries
-set autoread                            " Automatically read a file changed outside of vim
 set autowrite                           " Automatically write a file when leaving a modified buffe
 set linespace=0                         " No extra spaces between rows
 set timeoutlen=300                      " Set default timeout
+set autoread                            " Automatically read a file changed outside of vim"
+autocmd CursorHold,CursorHoldI * checktime
 
 " =============================================================================
 " Indent
@@ -81,7 +82,7 @@ set smartindent
 set shiftwidth=4                        " Use indents of 4 spaces
 set tabstop=4                           " An indentation every four columns
 set softtabstop=4                       " Let backspace delete indent
-set noexpandtab
+set expandtab
 
 " =============================================================================
 " UI
@@ -153,8 +154,26 @@ let g:Lf_PreviewInPopup=1
 " Cancel default key bindings
 let g:Lf_ShortcutB=''
 let g:Lf_ShortcutF=''
+" Do not generate tags by default
+let g:Lf_GtagsAutoGenerate=0
 " Use pygments if available
 let g:Lf_Gtagslabel='native-pygments'
+" Remap default keymap
+let g:Lf_CommandMap = { '<C-K>': ['<Up>'], '<C-J>': ['<Down>']  }
+let g:Lf_PreviewResult = {
+    \ 'File': 0,
+    \ 'Buffer': 1,
+    \ 'Mru': 0,
+    \ 'Tag': 1,
+    \ 'BufTag': 1,
+    \ 'Function': 1,
+    \ 'Line': 1,
+    \ 'Colorscheme': 0,
+    \ 'Rg': 1,
+    \ 'Gtags': 1
+    \}
+
+
 
 " =============================================================================
 " ALE
@@ -212,13 +231,13 @@ let g:floaterm_position='bottom'
 let g:floaterm_height=20
 let g:floaterm_width=0.99
 let g:floaterm_rootmarkers=[
-   \'.project',
-   \'.git',
-   \'.hg',
-   \'.svn',
-   \'.root',
-   \'.gitignore'
-   \]
+    \'.project',
+    \'.git',
+    \'.hg',
+    \'.svn',
+    \'.root',
+    \'.gitignore'
+    \]
 autocmd User Startified setlocal buflisted
 
 " =============================================================================
@@ -282,9 +301,14 @@ let g:which_key_map.s.1 = 'terminal 1'
 " Project management
 " {{{
 let g:which_key_map.p = { 'name': '+project' }
+" Search
+let g:which_key_map.p.s = { 'name': '+search' }
 " Search word under cursor
-nnoremap <leader>ps :<C-U><C-R>=printf("Leaderf! rg -e %s ", expand("<cword>"))<CR><CR>
-let g:which_key_map.p.s = 'search world'
+nnoremap <leader>psw :Leaderf rg --cword<CR>
+let g:which_key_map.p.s.w = 'search word'
+" Search file
+nnoremap <leader>psf :Leaderf file<CR>
+let g:which_key_map.p.s.f = 'search file'
 " }}}
 
 " Buffer management
